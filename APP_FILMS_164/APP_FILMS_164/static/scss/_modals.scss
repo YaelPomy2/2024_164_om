@@ -1,0 +1,52 @@
+@use "variables" as *;
+
+/* Panneaux type popup (connexion, etc.) — fond 100 % opaque */
+
+.page--auth-modal {
+    .page {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.auth-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: $z-topnav - 1;
+    background: var(--flash-overlay-bg);
+    pointer-events: none;
+}
+
+.auth-modal-panel {
+    position: relative;
+    z-index: $z-topnav;
+    max-width: 480px;
+    margin: $panel-margin-y auto;
+    padding: $space-9;
+    border-radius: $radius-xl;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+}
+
+.theme-toast {
+    position: fixed;
+    bottom: $space-9;
+    right: $space-9;
+    z-index: $z-flash;
+    padding: $space-5 $space-7;
+    border-radius: $radius-md;
+    border: 2px solid var(--border);
+    background: var(--flash-surface);
+    color: var(--text);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+
+    &.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

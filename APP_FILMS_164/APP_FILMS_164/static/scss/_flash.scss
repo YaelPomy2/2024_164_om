@@ -1,0 +1,113 @@
+@use "variables" as *;
+
+/* --- Messages flash (opaques, style uniforme) --- */
+
+.flash-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: $z-flash - 1;
+    background: var(--flash-overlay-bg);
+    pointer-events: auto;
+}
+
+.flash-stack {
+    position: fixed;
+    top: $flash-stack-top;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(92vw, $flash-stack-max);
+    z-index: $z-flash;
+    pointer-events: none;
+}
+
+.flash {
+    display: flex;
+    align-items: flex-start;
+    gap: $btn-gap-inner;
+    border: 2px solid var(--border);
+    border-radius: $flash-border-radius;
+    padding: $flash-padding-y $flash-padding-x;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: auto;
+    margin-bottom: $space-3;
+    background: var(--flash-surface);
+    color: var(--text);
+}
+
+.flash.flash-hide {
+    opacity: 0;
+    transform: translateY($flash-hide-translate-y);
+}
+
+.flash-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: $flash-icon-size;
+    height: $flash-icon-size;
+    border-radius: $radius-pill;
+    font-size: $flash-icon-font-size;
+    font-weight: $btn-font-weight;
+}
+
+.flash-text {
+    flex: 1;
+    line-height: 1.45;
+}
+
+.flash--danger {
+    border-color: var(--danger);
+    background: var(--flash-danger-bg);
+
+    .flash-icon {
+        background: var(--danger);
+        color: #fff;
+    }
+}
+
+.flash--warning {
+    border-color: var(--warning);
+    background: var(--flash-warning-bg);
+
+    .flash-icon {
+        background: var(--warning);
+        color: $btn-warning-fg;
+    }
+}
+
+.flash--success {
+    border-color: var(--success);
+    background: var(--flash-success-bg);
+
+    .flash-icon {
+        background: var(--success);
+        color: #fff;
+    }
+}
+
+.flash--info {
+    border-color: var(--accent);
+    background: var(--flash-info-bg);
+
+    .flash-icon {
+        background: var(--accent);
+        color: $btn-info-fg;
+    }
+}
+
+.flash__close {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1.05rem;
+    line-height: 1;
+    padding: $space-1;
+
+    &::before {
+        content: "×";
+    }
+}
