@@ -45,8 +45,6 @@ try:
         Dans l'application les lignes ci-dessous doivent se trouver ici... soit après l'instanciation de la classe "Flask"
     """
     from APP_FILMS_164.database import database_tools
-    from APP_FILMS_164.essais_wtf_forms import gestion_essai_wtf
-    from APP_FILMS_164.essais_wtf_forms import gestion_wtf_forms_demo_select
     from APP_FILMS_164.genres import gestion_genres_crud
     from APP_FILMS_164.demos_om_164 import routes_demos
 

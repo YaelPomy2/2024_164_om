@@ -18,8 +18,7 @@ import os
 import sys
 from pathlib import Path
 
-# Permet d'exécuter ce script en "Run in terminal" depuis n'importe quel dossier
-# (Cursor peut lancer le terminal dans le dossier du fichier courant).
+# Permet d'exécuter ce script depuis n'importe quel dossier de travail.
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))

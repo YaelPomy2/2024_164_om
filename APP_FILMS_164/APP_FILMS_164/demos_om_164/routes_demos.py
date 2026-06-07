@@ -11,11 +11,6 @@ from APP_FILMS_164.erreurs.exceptions import *
 from APP_FILMS_164.stock_admin.stock_queries import monthly_movement_totals
 
 
-@app.route('/index')
-def index():
-    return "Hello, le MONDE du Module 164 !"
-
-
 @app.route('/')
 @app.route('/homepage')
 def mapageprincipale():

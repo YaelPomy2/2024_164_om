@@ -11,7 +11,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-# Permet l'exécution directe du fichier (clic droit "Run in terminal") depuis n'importe quel dossier.
+# Permet d'exécuter ce script depuis n'importe quel dossier de travail.
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 

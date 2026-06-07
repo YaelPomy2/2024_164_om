@@ -137,6 +137,35 @@ def fetch_connexions_enriched() -> list[dict[str, Any]]:
         return db.fetchall()
 
 
+def inserer_connexion(fk_session: int) -> int:
+    with DBconnection() as db:
+        db.execute(
+            """UPDATE t_connexion
+               SET date_fin = NOW()
+               WHERE fk_session = %(fk_session)s
+                 AND date_fin IS NULL""",
+            {"fk_session": fk_session},
+        )
+        db.execute(
+            """INSERT INTO t_connexion (fk_session, date_debut)
+               VALUES (%(fk_session)s, NOW())""",
+            {"fk_session": fk_session},
+        )
+        db.execute("SELECT LAST_INSERT_ID() AS id")
+        return int(db.fetchone()["id"])
+
+
+def cloturer_connexion(id_connexion: int) -> None:
+    with DBconnection() as db:
+        db.execute(
+            """UPDATE t_connexion
+               SET date_fin = NOW()
+               WHERE id_connexion = %(id)s
+                 AND date_fin IS NULL""",
+            {"id": id_connexion},
+        )
+
+
 def fetch_tailles() -> list[dict[str, Any]]:
     with DBconnection() as db:
         db.execute("SELECT id_taille, taille FROM t_taille ORDER BY id_taille DESC")

@@ -10,6 +10,7 @@ from APP_FILMS_164 import app
 from APP_FILMS_164.database.database_tools import DBconnection
 from APP_FILMS_164.stock_admin.stock_config import FieldSpec, STOCK_NAV_TABLE_KEYS, TABLES, TableSpec
 from APP_FILMS_164.stock_admin.stock_queries import (
+    cloturer_connexion,
     count_sessions,
     fetch_connexions_enriched,
     fetch_produits,
@@ -17,6 +18,7 @@ from APP_FILMS_164.stock_admin.stock_queries import (
     fetch_sessions_by_password,
     fetch_sessions_list,
     fetch_tailles,
+    inserer_connexion,
 )
 
 LIST_COLUMN_LABELS: dict[str, str] = {
@@ -58,14 +60,23 @@ def _column_label(key: str) -> str:
 
 
 def _clear_active_session() -> None:
+    id_connexion = session.get("id_connexion_courante")
+    if id_connexion:
+        cloturer_connexion(int(id_connexion))
+    session.pop("id_connexion_courante", None)
     session.pop("active_session_id", None)
     session.pop("active_session_nom", None)
     session.pop("active_session_prenom", None)
     session.modified = True
 
 
-def _set_active_session(shop_session: dict) -> None:
+def _set_active_session(shop_session: dict, *, historiser: bool = False) -> None:
     session.permanent = False
+    if historiser:
+        id_connexion = session.get("id_connexion_courante")
+        if id_connexion:
+            cloturer_connexion(int(id_connexion))
+        session["id_connexion_courante"] = inserer_connexion(int(shop_session["id_session"]))
     session["active_session_id"] = shop_session["id_session"]
     session["active_session_nom"] = shop_session["nom"]
     session["active_session_prenom"] = shop_session["prenom"]
@@ -108,6 +119,7 @@ def inject_stock_nav():
         "list_column_label": _column_label,
         "active_session_label": label,
         "is_session_logged_in": active is not None,
+        "date_jour": datetime.now(),
     }
 
 
@@ -142,7 +154,7 @@ def stock_login():
         password = (request.form.get("password") or "").strip()
         matches = fetch_sessions_by_password(password)
         if len(matches) == 1:
-            _set_active_session(matches[0])
+            _set_active_session(matches[0], historiser=True)
             flash(f"Session active : {matches[0]['prenom']} {matches[0]['nom']}.", "success")
             return redirect(next_url, code=303)
         if len(matches) > 1:
@@ -404,7 +416,7 @@ def _render_add_edit(table_key: str, pk_value: str | None):
                 if spec.table == "t_session" and new_id and not _is_session_authenticated():
                     new_session = fetch_session_by_id(int(new_id))
                     if new_session:
-                        _set_active_session(new_session)
+                        _set_active_session(new_session, historiser=True)
                         flash("Vous êtes connecté avec cette nouvelle session.", "success")
             else:
                 assert spec.pk
@@ -452,7 +464,7 @@ def _handle_session_create_post() -> bool:
         if not active:
             new_session = fetch_session_by_id(int(new_id))
             if new_session:
-                _set_active_session(new_session)
+                _set_active_session(new_session, historiser=True)
 
         flash("Session créée.", "success")
         if active:
