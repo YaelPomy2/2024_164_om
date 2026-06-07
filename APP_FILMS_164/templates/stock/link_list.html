@@ -47,8 +47,8 @@
             <tbody>
                 {% for l in links %}
                     <tr>
-                        <td>{{ l.fk_produit }} - {{ l.produit_nom }}</td>
-                        <td>{{ l.fk_taille }} - {{ l.taille_lib }}</td>
+                        <td>{{ l.produit_nom }}</td>
+                        <td>{{ l.taille_lib }}</td>
                         <td class="text-center">
                             <form method="POST" action="{{ url_for('stock_link_delete', fk_produit=l.fk_produit, fk_taille=l.fk_taille) }}">
                                 <button class="btn btn--danger btn--sm" type="submit">Delete</button>

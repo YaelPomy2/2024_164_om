@@ -2,36 +2,68 @@
 {% block title %} Stock - {{ spec.label }} {% endblock %}
 {% block body %}
 <div class="wrap">
-    {% set readonly = request.view_args.table_key == "t_connexion" %}
     <div class="flex-between mt-3">
         <h3>{{ spec.label }}</h3>
-        {% if not readonly %}
+        {% if not readonly and not show_session_panel %}
         <a class="btn btn--primary" href="{{ url_for('stock_table_add', table_key=request.view_args.table_key) }}">Ajouter</a>
         {% endif %}
     </div>
+
+    {% if active_session_label %}
+    <p class="muted mt-3">Session active : <strong>{{ active_session_label }}</strong></p>
+    {% endif %}
+
+    {% if show_session_panel %}
+    <section class="panel panel--session-create mt-3">
+        <h4>Créer une session</h4>
+        {% if active_session %}
+        <p class="muted">Vous êtes connecté en tant que <strong>{{ active_session.prenom }} {{ active_session.nom }}</strong>. La nouvelle session sera ajoutée à la liste, votre session active reste inchangée.</p>
+        {% else %}
+        <p class="muted">Créez la première session. Vous serez automatiquement connecté avec celle-ci.</p>
+        {% endif %}
+        <form method="POST" class="layout-grid-2 mt-3" novalidate>
+            <input type="hidden" name="action" value="create_session">
+            <div class="field">
+                <label class="field-label" for="session_nom">Nom</label>
+                <input id="session_nom" name="nom" type="text" class="control" required>
+            </div>
+            <div class="field">
+                <label class="field-label" for="session_prenom">Prénom</label>
+                <input id="session_prenom" name="prenom" type="text" class="control" required>
+            </div>
+            <div class="field">
+                <label class="field-label" for="session_mdp">Mot de passe de la session</label>
+                <input id="session_mdp" name="mot_de_passe" type="password" class="control" required>
+            </div>
+            <div class="field field--actions">
+                <button class="btn btn--primary" type="submit">Créer la session</button>
+            </div>
+        </form>
+    </section>
+    {% endif %}
+
     <div class="table-wrap">
         <table class="data-table data-table--bordered data-table--compact mt-3">
             <thead>
                 <tr>
                     {% for c in spec.list_columns %}
-                        <th>{{ c }}</th>
+                    <th>{{ list_column_label(c) }}</th>
                     {% endfor %}
-                    <th></th>
-                    <th></th>
+                    {% if not readonly %}<th></th><th></th>{% endif %}
                 </tr>
             </thead>
             <tbody>
             {% for row in rows %}
                 <tr>
                     {% for c in spec.list_columns %}
-                        <td>{{ row[c] }}</td>
+                    <td>{{ row[c] if row[c] is not none else '—' }}</td>
                     {% endfor %}
                     {% if not readonly %}
                     <td class="text-center">
-                        <a class="btn btn--warning btn--sm" href="{{ url_for('stock_table_edit', table_key=request.view_args.table_key, pk=row[spec.pk]) }}">Edit</a>
+                        <a class="btn btn--warning btn--sm" href="{{ url_for('stock_table_edit', table_key=request.view_args.table_key, pk=row[spec.pk]) }}">Modifier</a>
                     </td>
                     <td class="text-center">
-                        <a class="btn btn--danger btn--sm" href="{{ url_for('stock_table_delete', table_key=request.view_args.table_key, pk=row[spec.pk]) }}">Delete</a>
+                        <a class="btn btn--danger btn--sm" href="{{ url_for('stock_table_delete', table_key=request.view_args.table_key, pk=row[spec.pk]) }}">Supprimer</a>
                     </td>
                     {% endif %}
                 </tr>

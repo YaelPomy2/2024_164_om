@@ -1,6 +1,14 @@
 @use "variables" as *;
 
-/* --- Messages flash --- */
+/* --- Messages flash (opaques, style uniforme) --- */
+
+.flash-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: $z-flash - 1;
+    background: var(--flash-overlay-bg);
+    pointer-events: auto;
+}
 
 .flash-stack {
     position: fixed;
@@ -14,15 +22,17 @@
 
 .flash {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: $btn-gap-inner;
-    border: 1px solid var(--border);
+    border: 2px solid var(--border);
     border-radius: $flash-border-radius;
     padding: $flash-padding-y $flash-padding-x;
-    box-shadow: var(--shadow);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
     transition: opacity 0.4s ease, transform 0.4s ease;
     pointer-events: auto;
     margin-bottom: $space-3;
+    background: var(--flash-surface);
+    color: var(--text);
 }
 
 .flash.flash-hide {
@@ -34,6 +44,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     width: $flash-icon-size;
     height: $flash-icon-size;
     border-radius: $radius-pill;
@@ -43,11 +54,12 @@
 
 .flash-text {
     flex: 1;
+    line-height: 1.45;
 }
 
 .flash--danger {
-    border-color: rgba(220, 38, 38, 0.4);
-    background: rgba(220, 38, 38, 0.12);
+    border-color: var(--danger);
+    background: var(--flash-danger-bg);
 
     .flash-icon {
         background: var(--danger);
@@ -56,8 +68,8 @@
 }
 
 .flash--warning {
-    border-color: rgba(217, 119, 6, 0.4);
-    background: rgba(217, 119, 6, 0.14);
+    border-color: var(--warning);
+    background: var(--flash-warning-bg);
 
     .flash-icon {
         background: var(--warning);
@@ -66,8 +78,8 @@
 }
 
 .flash--success {
-    border-color: rgba(22, 163, 74, 0.35);
-    background: rgba(22, 163, 74, 0.12);
+    border-color: var(--success);
+    background: var(--flash-success-bg);
 
     .flash-icon {
         background: var(--success);
@@ -76,8 +88,8 @@
 }
 
 .flash--info {
-    border-color: rgba(2, 132, 199, 0.35);
-    background: rgba(2, 132, 199, 0.12);
+    border-color: var(--accent);
+    background: var(--flash-info-bg);
 
     .flash-icon {
         background: var(--accent);

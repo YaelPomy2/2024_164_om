@@ -26,6 +26,10 @@ try:
         # OM 2022.04.11 Début de l'application
         app = Flask(__name__, template_folder="templates")
         app.config["STOCK_ADMIN_PASSWORD"] = STOCK_ADMIN_PASSWORD
+        # Cookie de session navigateur : expiré à la fermeture du navigateur (pas de session persistante).
+        app.config["SESSION_PERMANENT"] = False
+        app.config["SESSION_COOKIE_HTTPONLY"] = True
+        app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
         print("app.url_map ____> ", app.url_map)
 
     except Exception as erreur:

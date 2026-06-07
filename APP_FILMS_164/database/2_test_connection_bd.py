@@ -3,6 +3,9 @@ Fichier : 2_test_connection_bd.py
 Auteur : OM 2023.03.21
 """
 
+from typing import Any
+
+
 from __future__ import annotations
 
 import sys
@@ -23,7 +26,7 @@ try:
     with DBconnection() as db:
         db.execute(strsql_genres_afficher)
         result = db.fetchall()
-        print("data_genres ", result, " Type : ", type(result))
+        print("data_genres ", result, " Type : ", type[tuple[Any, ...], ...](result))
 
 
 except Exception as erreur:

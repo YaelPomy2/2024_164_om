@@ -1,17 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Connexion Stock{% endblock %}
 {% block body %}
-<div class="wrap" style="max-width: 520px;">
-    <div class="panel">
-        <h3 class="mb-3">Connexion à la gestion stock</h3>
-        <p class="muted">Entre le mot de passe pour accéder aux pages stock.</p>
-        <form method="POST">
+<div class="auth-modal-backdrop" aria-hidden="true"></div>
+<div class="wrap page--auth-modal">
+    <div class="auth-modal-panel">
+        <h3 class="mb-3">Connexion</h3>
+        <p class="muted">Saisissez le mot de passe d'une session existante. La session expire à la fermeture du navigateur.</p>
+        {% if no_sessions_yet %}
+        <p class="muted"><a href="{{ url_for('stock_table_list', table_key='t_session') }}">Créer la première session</a> avant de vous connecter.</p>
+        {% endif %}
+        <form method="POST" class="mt-3">
             <input type="hidden" name="next" value="{{ next_url }}">
             <div class="field">
-                <label for="password" class="field-label">Mot de passe</label>
+                <label for="password" class="field-label">Mot de passe de session</label>
                 <input id="password" name="password" type="password" class="control" required autofocus>
             </div>
-            <button type="submit" class="btn btn--primary">Se connecter</button>
+            <button type="submit" class="btn btn--primary u-width-full">Se connecter</button>
         </form>
     </div>
 </div>

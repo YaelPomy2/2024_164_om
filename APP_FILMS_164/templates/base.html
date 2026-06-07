@@ -37,7 +37,7 @@
 					{% for key, nav_spec in stock_nav_tables %}
 					<li><a class="topnav__sublink" href="{{ url_for('stock_table_list', table_key=key) }}">{{ nav_spec.label }}</a></li>
 					{% endfor %}
-					{% if session.get('stock_authenticated') %}
+					{% if is_session_logged_in %}
 					<li>
 						<form method="POST" action="{{ url_for('stock_logout') }}" class="topnav__form">
 							<button class="btn btn--secondary btn--sm u-width-full" type="submit">Se déconnecter</button>
@@ -90,12 +90,30 @@
 			toggle.textContent = current === "dark" ? "Mode clair" : "Mode nuit";
 		};
 
+		const showThemeToast = (message) => {
+			let toast = document.getElementById("themeToast");
+			if (!toast) {
+				toast = document.createElement("div");
+				toast.id = "themeToast";
+				toast.className = "theme-toast";
+				toast.setAttribute("role", "status");
+				document.body.appendChild(toast);
+			}
+			toast.textContent = message;
+			toast.classList.add("is-visible");
+			window.clearTimeout(showThemeToast._timer);
+			showThemeToast._timer = window.setTimeout(() => {
+				toast.classList.remove("is-visible");
+			}, 2200);
+		};
+
 		toggle.addEventListener("click", function () {
 			const current = getActiveTheme();
 			const next = current === "dark" ? "light" : "dark";
 			document.documentElement.setAttribute("data-theme", invertTheme(next));
 			localStorage.setItem("theme", next);
 			refreshLabel();
+			showThemeToast(next === "dark" ? "Mode sombre activé" : "Mode clair activé");
 		});
 
 		refreshLabel();

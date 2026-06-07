@@ -13,6 +13,6 @@
         {% endfor %}
     </div>
     <hr style="border: none; border-top: 1px solid var(--border); margin: 1.5rem 0;">
-    <a class="btn btn--primary" href="{{ url_for('stock_create_session') }}">Créer une session</a>
+    <a class="btn btn--primary" href="{{ url_for('stock_table_list', table_key='t_session') }}">Créer / gérer les sessions</a>
 </div>
 {% endblock %}

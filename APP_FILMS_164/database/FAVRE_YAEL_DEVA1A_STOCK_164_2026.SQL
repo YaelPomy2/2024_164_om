@@ -19,10 +19,20 @@ SET time_zone = "+00:00";
 -- TABLES
 -- ============================
 
+DROP TABLE IF EXISTS `t_personne`;
 DROP TABLE IF EXISTS `t_session`;
 CREATE TABLE `t_session` (
   `id_session` int(11) NOT NULL,
   `fk_personne` int(11) DEFAULT NULL,
+  `nom` varchar(50) NOT NULL,
+  `prenom` varchar(50) NOT NULL,
+  `mot_de_passe` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `t_personne`;
+CREATE TABLE `t_personne` (
+  `id_personne` int(11) NOT NULL,
+  `fk_session` int(11) NOT NULL,
   `nom` varchar(50) NOT NULL,
   `prenom` varchar(50) NOT NULL,
   `mot_de_passe` varchar(255) NOT NULL
@@ -54,7 +64,9 @@ DROP TABLE IF EXISTS `t_produit`;
 CREATE TABLE `t_produit` (
   `id_produit` int(11) NOT NULL,
   `fk_modele` int(11) DEFAULT NULL,
-  `type` varchar(50) NOT NULL,
+  `fk_taille` int(11) DEFAULT NULL,
+  `fk_marque` int(11) DEFAULT NULL,
+  `type` varchar(150) NOT NULL,
   `prix` decimal(10,2) NOT NULL,
   `quantite_stock` smallint(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -88,6 +100,10 @@ CREATE TABLE `t_mouvement` (
 ALTER TABLE `t_session`
   ADD PRIMARY KEY (`id_session`);
 
+ALTER TABLE `t_personne`
+  ADD PRIMARY KEY (`id_personne`),
+  ADD KEY `fk_session` (`fk_session`);
+
 ALTER TABLE `t_connexion`
   ADD PRIMARY KEY (`id_connexion`),
   ADD KEY `fk_session` (`fk_session`);
@@ -101,7 +117,9 @@ ALTER TABLE `t_modele`
 
 ALTER TABLE `t_produit`
   ADD PRIMARY KEY (`id_produit`),
-  ADD KEY `fk_modele` (`fk_modele`);
+  ADD KEY `fk_modele` (`fk_modele`),
+  ADD KEY `fk_taille` (`fk_taille`),
+  ADD KEY `fk_marque` (`fk_marque`);
 
 ALTER TABLE `t_taille`
   ADD PRIMARY KEY (`id_taille`);
@@ -121,6 +139,9 @@ ALTER TABLE `t_mouvement`
 
 ALTER TABLE `t_session`
   MODIFY `id_session` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `t_personne`
+  MODIFY `id_personne` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `t_connexion`
   MODIFY `id_connexion` int(11) NOT NULL AUTO_INCREMENT;
@@ -147,11 +168,19 @@ ALTER TABLE `t_mouvement`
 ALTER TABLE `t_connexion`
   ADD CONSTRAINT `t_connexion_ibfk_1` FOREIGN KEY (`fk_session`) REFERENCES `t_session` (`id_session`);
 
+ALTER TABLE `t_personne`
+  ADD CONSTRAINT `t_personne_ibfk_1` FOREIGN KEY (`fk_session`) REFERENCES `t_session` (`id_session`);
+
+ALTER TABLE `t_session`
+  ADD CONSTRAINT `t_session_ibfk_1` FOREIGN KEY (`fk_personne`) REFERENCES `t_personne` (`id_personne`);
+
 ALTER TABLE `t_modele`
   ADD CONSTRAINT `t_modele_ibfk_1` FOREIGN KEY (`fk_marque`) REFERENCES `t_marque` (`id_marque`);
 
 ALTER TABLE `t_produit`
-  ADD CONSTRAINT `t_produit_ibfk_1` FOREIGN KEY (`fk_modele`) REFERENCES `t_modele` (`id_modele`);
+  ADD CONSTRAINT `t_produit_ibfk_1` FOREIGN KEY (`fk_modele`) REFERENCES `t_modele` (`id_modele`),
+  ADD CONSTRAINT `t_produit_ibfk_2` FOREIGN KEY (`fk_taille`) REFERENCES `t_taille` (`id_taille`),
+  ADD CONSTRAINT `t_produit_ibfk_3` FOREIGN KEY (`fk_marque`) REFERENCES `t_marque` (`id_marque`);
 
 ALTER TABLE `t_link_produit_taille`
   ADD CONSTRAINT `t_link_produit_taille_ibfk_1` FOREIGN KEY (`fk_produit`) REFERENCES `t_produit` (`id_produit`),

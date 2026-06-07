@@ -8,6 +8,7 @@ from flask import render_template
 from APP_FILMS_164 import app
 from APP_FILMS_164.erreurs.msg_erreurs import *
 from APP_FILMS_164.erreurs.exceptions import *
+from APP_FILMS_164.stock_admin.stock_queries import monthly_movement_totals
 
 
 @app.route('/index')
@@ -18,7 +19,28 @@ def index():
 @app.route('/')
 @app.route('/homepage')
 def mapageprincipale():
-    return render_template("home.html")
+    try:
+        stats = monthly_movement_totals()
+    except Exception:
+        stats = {
+            "year": 2026,
+            "month": 1,
+            "labels": ["1"],
+            "depenses": [0],
+            "benefices": [0],
+            "total_depenses": 0,
+            "total_benefices": 0,
+        }
+    return render_template(
+        "home.html",
+        chart_year=stats["year"],
+        chart_month=stats["month"],
+        chart_labels=stats["labels"],
+        chart_depenses=stats["depenses"],
+        chart_benefices=stats["benefices"],
+        total_depenses=stats["total_depenses"],
+        total_benefices=stats["total_benefices"],
+    )
 
 
 @app.route('/essai')

@@ -33,6 +33,10 @@
                         <input type="datetime-local" class="control" name="{{ f.name }}"
                                value="{% if row and row[f.name] %}{{ row[f.name].strftime('%Y-%m-%dT%H:%M') }}{% endif %}"
                                {% if f.required %}required{% endif %}>
+                    {% elif f.kind == "password" %}
+                        <input type="password" class="control" name="{{ f.name }}"
+                               placeholder="{% if row %}Laisser vide pour conserver{% else %}Saisir le mot de passe{% endif %}"
+                               {% if f.required and not row %}required{% endif %}>
                     {% else %}
                         <input type="text" class="control" name="{{ f.name }}" value="{% if row %}{{ row[f.name] }}{% endif %}" {% if f.required %}required{% endif %}>
                     {% endif %}

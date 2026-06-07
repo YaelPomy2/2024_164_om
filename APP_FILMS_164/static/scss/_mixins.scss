@@ -16,6 +16,12 @@
     --warning: #{$light-warning};
     --success: #{$light-success};
     --shadow: #{$light-shadow};
+    --flash-overlay-bg: #e8edf4;
+    --flash-surface: #ffffff;
+    --flash-danger-bg: #fecaca;
+    --flash-warning-bg: #fde68a;
+    --flash-success-bg: #bbf7d0;
+    --flash-info-bg: #bae6fd;
 }
 
 @mixin theme-light-explicit-css-vars {
@@ -32,6 +38,12 @@
     --warning: #{$light-warning};
     --success: #{$light-success};
     --shadow: #{$light-shadow};
+    --flash-overlay-bg: #e8edf4;
+    --flash-surface: #ffffff;
+    --flash-danger-bg: #fecaca;
+    --flash-warning-bg: #fde68a;
+    --flash-success-bg: #bbf7d0;
+    --flash-info-bg: #bae6fd;
 }
 
 @mixin theme-dark-css-vars {
@@ -48,6 +60,12 @@
     --warning: #{$dark-warning};
     --success: #{$dark-success};
     --shadow: #{$dark-shadow};
+    --flash-overlay-bg: #0b1220;
+    --flash-surface: #1e293b;
+    --flash-danger-bg: #7f1d1d;
+    --flash-warning-bg: #78350f;
+    --flash-success-bg: #14532d;
+    --flash-info-bg: #0c4a6e;
 }
 
 /// Anneau de focus sur champs (suit la couleur d’accent du thème actif)

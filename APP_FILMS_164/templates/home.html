@@ -1,16 +1,98 @@
 {% extends "base.html" %}
-{% block title %} Homepage STOCK {% endblock %}
+{% block title %}Accueil — Stock du shop{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+{% endblock %}
 {% block body %}
-<div class="wrap">
-	<h3>Interface Stock</h3>
-	<h3>Gestion des tables (personnes, sessions, produits, etc.)</h3>
-	<ul>
-		<li class="list-item">
-			<a href="{{ url_for('stock_home') }}">Ouvrir l'interface Stock</a>
-		</li>
-				<li class="list-item">
-					<a href="{{ url_for('stock_create_session') }}">Créer une session</a>
-				</li>
-	</ul>
+{% set chart_month = chart_month|default(1, true) %}
+{% set chart_year = chart_year|default(2026, true) %}
+{% set total_depenses = total_depenses|default(0, true) %}
+{% set total_benefices = total_benefices|default(0, true) %}
+<div class="wrap homepage">
+    <header class="homepage-hero">
+        <p class="homepage-hero__eyebrow">Tableau de bord</p>
+        <h1 class="homepage-hero__title">Stock du shop</h1>
+        <p class="homepage-hero__lead">Suivi des entrées et sorties de stock, gestion des produits et des sessions.</p>
+    </header>
+
+    <div class="homepage-actions">
+        <a class="action-card action-card--primary" href="{{ url_for('stock_home') }}">
+            <span class="action-card__icon" aria-hidden="true">📦</span>
+            <span class="action-card__title">Ouvrir l'interface Stock</span>
+            <span class="action-card__desc">Produits, sessions, tailles et historique</span>
+        </a>
+        <a class="action-card action-card--accent" href="{{ url_for('stock_table_list', table_key='t_session') }}">
+            <span class="action-card__icon" aria-hidden="true">👤</span>
+            <span class="action-card__title">Créer une session</span>
+            <span class="action-card__desc">Gérer et créer des sessions</span>
+        </a>
+    </div>
+
+    <section class="homepage-charts mt-3">
+        <h2 class="homepage-charts__title">Mois en cours — {{ "%02d"|format(chart_month) }}/{{ chart_year }}</h2>
+        <div class="chart-grid">
+            <article class="chart-card panel">
+                <h3>Dépenses (produits enregistrés — DEPOT)</h3>
+                <p class="chart-card__total">Total : <strong>{{ total_depenses }} €</strong></p>
+                <canvas id="chartDepenses" height="200" aria-label="Graphique des dépenses du mois"></canvas>
+            </article>
+            <article class="chart-card panel">
+                <h3>Bénéfices (produits sortis — RETRAIT)</h3>
+                <p class="chart-card__total">Total : <strong>{{ total_benefices }} €</strong></p>
+                <canvas id="chartBenefices" height="200" aria-label="Graphique des bénéfices du mois"></canvas>
+            </article>
+        </div>
+    </section>
 </div>
+{% endblock %}
+{% block javascript %}
+{{ super() }}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (typeof Chart === "undefined") return;
+    const labels = {{ chart_labels|default(["1"], true)|tojson }};
+    const depenses = {{ chart_depenses|default([0], true)|tojson }};
+    const benefices = {{ chart_benefices|default([0], true)|tojson }};
+    const gridColor = getComputedStyle(document.documentElement).getPropertyValue("--border").trim() || "#dbe3ee";
+    const textColor = getComputedStyle(document.documentElement).getPropertyValue("--text").trim() || "#111827";
+
+    const baseOptions = {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { display: false } },
+        scales: {
+            x: { ticks: { color: textColor }, grid: { color: gridColor } },
+            y: { ticks: { color: textColor }, grid: { color: gridColor }, beginAtZero: true }
+        }
+    };
+
+    new Chart(document.getElementById("chartDepenses"), {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Dépenses (€)",
+                data: depenses,
+                backgroundColor: "rgba(220, 38, 38, 0.85)",
+                borderRadius: 6
+            }]
+        },
+        options: baseOptions
+    });
+
+    new Chart(document.getElementById("chartBenefices"), {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Bénéfices (€)",
+                data: benefices,
+                backgroundColor: "rgba(22, 163, 74, 0.85)",
+                borderRadius: 6
+            }]
+        },
+        options: baseOptions
+    });
+});
+</script>
 {% endblock %}
